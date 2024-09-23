@@ -1,7 +1,21 @@
 .App {
   text-align: center;
 }
-
+.container {
+  margin-left: 15%;
+  margin-right: 15%;
+  padding: 20px;
+}
+.search-bar-background {
+  height: 20vh; /* 20% of the viewport height */
+  width: 100%; /* Full width */
+  background-image: url('./images/techBackground.jpg'); /* Replace with your image path */
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center; /* Center vertically */
+  justify-content: center; /* Center horizontally */
+}
 .App-logo {
   height: 40vmin;
   pointer-events: none;

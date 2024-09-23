@@ -1,0 +1,50 @@
+.search-bar-container {
+    display: flex;
+    align-items: center;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-left: 15%;
+    margin-right: 15%;
+    width: 100%;
+  }
+
+  .search-input {
+    flex-grow: 1;
+    border: none;
+    padding: 10px 15px;
+    font-size: 16px;
+    outline: none;
+  }
+  
+  .search-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ccc;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    color: white;
+    font-size: 18px;
+  }
+
+  
+  .search-button:focus {
+    outline: none;
+  }
+  
+  .search-input::placeholder {
+    color: #888;
+  }
+  
+  .search-bar-container input,
+  .search-bar-container button {
+    border: none;
+    outline: none;
+  }
+  
+  /* Ensure button and input are merged */
+  .search-button {
+    border-left: 0px solid #ddd; /* Optional: Separate button slightly */
+  }
