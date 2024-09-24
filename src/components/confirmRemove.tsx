@@ -2,15 +2,16 @@
 import React from 'react';
 import './confirmRemove.css';
 import { FaTrashAlt } from 'react-icons/fa';
+import { Car } from '../model/car';
 
 interface ConfirmRemoveModalProps {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: () => void;
-  userName: string;
+  car: Car | null;
 }
 
-const ConfirmRemoveModal: React.FC<ConfirmRemoveModalProps> = ({ isOpen, onClose, onConfirm, userName }) => {
+const ConfirmRemoveModal: React.FC<ConfirmRemoveModalProps> = ({ isOpen, onClose, onConfirm, car }) => {
   if (!isOpen) return null;
 
   return (

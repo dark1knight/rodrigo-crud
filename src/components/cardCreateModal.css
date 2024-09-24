@@ -74,3 +74,6 @@
 .modal-close-button:hover {
   color: #000;
 }
+.modal-content input[type="file"] {
+  margin-top: 10px;
+}

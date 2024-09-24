@@ -1,12 +1,15 @@
 // src/App.tsx
 import React, { useState } from 'react';
 import SearchBar from './components/SearchBar';
-import UserCard from './components/userCard'
+
+import CarCard from './components/carCard';
+
 import axios from 'axios';
 import Modal from './components/cardCreateModal';
 import ConfirmRemoveModal from './components/confirmRemove';
 import EditModal from './components/editModal';
 import './App.css';
+import { Car } from './model/car';
 interface SearchResult {
   id: number;
   name: string;
@@ -14,67 +17,76 @@ interface SearchResult {
 }
 
 const App: React.FC = () => {
-  const [results, setResults] = useState<SearchResult[]>([]);
-  const [users, setUsers] = useState<SearchResult[]>([]); 
+  const [result, setResult] = useState<Car[]>([]);
+
+  const [cars, setCars] = useState<Car[]>([]);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isConfirmRemoveOpen, setIsConfirmRemoveOpen] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<SearchResult | null>(null);
+
+  const [selectedCar, setSelectedCar] = useState<Car | null>(null);
 
   const handleSearch = async (query: string) => {
     try {
-      const response = await axios.get<SearchResult[]>(`https://localhost:7006/api/Users/search?query=${query}`);
-      setResults(response.data);
+      const response = await axios.get<Car[]>(`https://localhost:7006/api/Cars/search?query=${query}`);
+      setResult(response.data);
     } catch (error) {
       console.error('Error:', error);
     }
   };
-  const handleCreateUser = async (name: string, email: string) => {
-    const newUser = { name, email };
-
+  const handleCreateCar = async (name: string, status: string, photoBase64: string) => {
+    const newCar = {
+      name,
+      status,
+      photo: {
+        base64: photoBase64 || null // Handle empty photo input
+      }
+    };
+  
     try {
-      const response = await axios.post<SearchResult>('https://localhost:7006/api/users', newUser);
-      setUsers([...users, response.data]);
+      const response = await axios.post<Car>('https://localhost:7006/api/cars', newCar);
+      setCars((prevCars) => [...prevCars, response.data]); // Update the car list with the new car
     } catch (error) {
-      console.error('Error creating user:', error);
+      console.error('Error creating car:', error);
+    }
+  };
+  const removeCar = async (id: number) => {
+    try {
+      await axios.delete(`https://localhost:7006/api/cars/${id}`);
+      setCars(cars.filter((car) => car.id !== id))
+      setResult(result.filter((car) => car.id !== id)); 
+      setSelectedCar(null); // Reset the selected car
+    } catch (error) {
+      console.error('Error removing car:', error);
     }
   };
 
-  const handleRemoveUser = async (id: number) => {
-    try {
-      await axios.delete(`https://localhost:7006/api/users/${id}`);
-      setUsers(users.filter(user => user.id !== id));
-      setResults(results.filter(user => user.id !== id));
-    } catch (error) {
-      console.error('Error removing user:', error);
-    }
+  const openConfirmRemoveModal = (car: Car) => {
+    setSelectedCar(car); 
+    setIsConfirmRemoveOpen(true); 
   };
-  const openConfirmRemoveModal = (user: SearchResult) => {
-    setSelectedUser(user); // Set the user to be removed
-    setIsConfirmRemoveOpen(true); // Open the confirmation modal
-  };
-
-  const confirmRemoveUser = () => {
-    if (selectedUser) {
-      handleRemoveUser(selectedUser.id); // Call remove user logic
+  const confirmRemoveCar = () => {
+    if (selectedCar) {
+      removeCar(selectedCar.id); // Call remove user logic
       setIsConfirmRemoveOpen(false); // Close the confirmation modal
     }
   };
-  const handleEditUser = async (id: number, name: string, email: string) => {
-    try {
-      const response = await axios.put<SearchResult>(`https://localhost:7006/api/users/${id}`, { name, email });
-      setUsers(users.map(user => user.id === id ? response.data : user));
-      setResults(results.map(user => user.id === id ? response.data : user));
-    } catch (error) {
-      console.error('Error editing user:', error);
-    }
-  };
 
-  const openEditModal = (user: SearchResult) => {
-    setSelectedUser(user); // Set the user to be edited
+  const openEditModal = (car: Car) => {
+    setSelectedCar(car); // Set the car to be edited
     setIsEditModalOpen(true); // Open the edit modal
   };
-
+  const handleEditCar = async (id: number, name: string, status: string, photoBase64: string | null) => {
+    try {
+      const updatedCar = { name, status, photo: { base64: photoBase64 || '' } };
+      const response = await axios.put<Car>(`https://localhost:7006/api/cars/${id}`, updatedCar);
+      setCars(cars.map(car => car.id === id ? response.data : car));
+      setResult(result.map(car => car.id === id ? response.data : car));
+    } catch (error) {
+      console.error('Error editing car:', error);
+    }
+  };
   return (
   <div>
     <div className='search-bar-background'>
@@ -89,31 +101,31 @@ const App: React.FC = () => {
         <Modal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
-          onSubmit={handleCreateUser}
+          onSubmit={handleCreateCar}
         />
-        {selectedUser && (
+        {isEditModalOpen && selectedCar && (
         <EditModal
           isOpen={isEditModalOpen}
           onClose={() => setIsEditModalOpen(false)}
-          onSubmit={handleEditUser}
-          currentUser={selectedUser}
+          onSubmit={handleEditCar}
+          carToEdit={selectedCar}
         />
         )}
         <ConfirmRemoveModal
         isOpen={isConfirmRemoveOpen}
         onClose={() => setIsConfirmRemoveOpen(false)}
-        onConfirm={confirmRemoveUser}
-        userName={selectedUser ? selectedUser.name : ''}
+        onConfirm={confirmRemoveCar}
+        car={selectedCar ? selectedCar : null}
         />
-      <div className='results-container'>
-        {results.map((user) => (
-            <UserCard
-              key={user.id}
-              user={user}
-              handleRemoveUser={() => openConfirmRemoveModal(user)}
-              handleEditUser={() => openEditModal(user)}
-            />
-          ))}
+     <div className="results-container">
+      {result.map((car) => (
+        <CarCard
+          key={car.id}
+          car={car}  
+          handleRemoveCar={() => openConfirmRemoveModal(car)}
+          handleEditCar={() => openEditModal(car)}  
+        />
+      ))}
       </div>
     </div>
   </div>

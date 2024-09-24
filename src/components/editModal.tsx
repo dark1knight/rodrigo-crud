@@ -1,34 +1,51 @@
 // src/components/EditUserModal.tsx
 import React, { useState, useEffect } from 'react';
 import './editModal.css';
+import {Car} from '../model/car'
 
 interface EditUserModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (id: number, name: string, email: string) => void;
-  currentUser: { id: number; name: string; email: string }; // Current user to edit
+  onSubmit: (id: number, name: string, status: string, photoBase64: string | null) => void;
+  carToEdit: Car | null;
 }
 
-const EditUserModal: React.FC<EditUserModalProps> = ({ isOpen, onClose, onSubmit, currentUser }) => {
+const EditUserModal: React.FC<EditUserModalProps> = ({ isOpen, onClose, onSubmit, carToEdit }) => {
   const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
+  const [status, setStatus] = useState('');
+  const [photoBase64, setPhotoBase64] = useState<string | null>(null);
 
   // Pre-fill the form when the modal is opened with the current user data
   useEffect(() => {
-    if (isOpen) {
-      setName(currentUser.name);
-      setEmail(currentUser.email);
+    if (isOpen && carToEdit) {
+      setName(carToEdit.name);
+      setStatus(carToEdit.status);
+      setPhotoBase64(carToEdit.photo?.base64 || null);
     }
-  }, [isOpen, currentUser]);
+  }, [isOpen, carToEdit]);
+  if (!isOpen || !carToEdit) return null;
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result as string;
+        setPhotoBase64(base64String.split(',')[1]); // Remove the prefix
+      };
+      reader.readAsDataURL(file);
+    }
+  };
   const handleSubmit = () => {
-    if (name && email) {
-      onSubmit(currentUser.id, name, email);
-      onClose(); // Close modal after submission
+    if (name && status) {
+      onSubmit(carToEdit.id, name, status, photoBase64);
+      setName('');
+      setStatus('');
+      setPhotoBase64(null);
+      onClose();
     }
   };
 
-  if (!isOpen) return null;
 
   return (
     <div className="edit-user-modal-overlay">
@@ -36,7 +53,7 @@ const EditUserModal: React.FC<EditUserModalProps> = ({ isOpen, onClose, onSubmit
         <button className="edit-user-close-button" onClick={onClose}>
           &times;
         </button>
-        <h2>Edit User</h2>
+        <h2>Editar Card</h2>
         <input
           type="text"
           value={name}
@@ -44,10 +61,16 @@ const EditUserModal: React.FC<EditUserModalProps> = ({ isOpen, onClose, onSubmit
           placeholder="Name"
         />
         <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Email"
+          type="text"
+          value={status}
+          onChange={(e) => setStatus(e.target.value)}
+          placeholder="Car Status"
+          required
+        />
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleFileChange}
         />
         <div className="edit-user-modal-buttons">
           <button onClick={handleSubmit}>Submit</button>
