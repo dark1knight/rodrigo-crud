@@ -16,6 +16,18 @@
   align-items: center; /* Center vertically */
   justify-content: center; /* Center horizontally */
 }
+.create-user-section {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  justify-content: space-between
+}
+.results-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px; 
+  justify-content: flex-start; 
+}
 .App-logo {
   height: 40vmin;
   pointer-events: none;

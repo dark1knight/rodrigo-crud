@@ -34,17 +34,9 @@
     outline: none;
   }
   
-  .search-input::placeholder {
-    color: #888;
-  }
   
   .search-bar-container input,
   .search-bar-container button {
     border: none;
     outline: none;
-  }
-  
-  /* Ensure button and input are merged */
-  .search-button {
-    border-left: 0px solid #ddd; /* Optional: Separate button slightly */
   }
