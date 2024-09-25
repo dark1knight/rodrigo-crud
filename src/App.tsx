@@ -1,20 +1,13 @@
 // src/App.tsx
 import React, { useState } from 'react';
 import SearchBar from './components/SearchBar';
-
 import CarCard from './components/carCard';
-
 import axios from 'axios';
 import Modal from './components/cardCreateModal';
 import ConfirmRemoveModal from './components/confirmRemove';
 import EditModal from './components/editModal';
 import './App.css';
 import { Car } from './model/car';
-interface SearchResult {
-  id: number;
-  name: string;
-  email: string;
-}
 
 const App: React.FC = () => {
   const [result, setResult] = useState<Car[]>([]);
@@ -26,6 +19,23 @@ const App: React.FC = () => {
   const [isConfirmRemoveOpen, setIsConfirmRemoveOpen] = useState(false);
 
   const [selectedCar, setSelectedCar] = useState<Car | null>(null);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+  const indexOfLastCar = currentPage * itemsPerPage;
+  const indexOfFirstCar = indexOfLastCar - itemsPerPage;
+  const currentCars = cars.slice(indexOfFirstCar, indexOfLastCar);
+
+  const nextPage = () => {
+    if (currentPage < Math.ceil(cars.length / itemsPerPage)) {
+      setCurrentPage((prevPage) => prevPage + 1);
+    }
+  };
+  const prevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prevPage) => prevPage - 1);
+    }
+  };
 
   const handleSearch = async (query: string) => {
     try {
@@ -46,7 +56,8 @@ const App: React.FC = () => {
   
     try {
       const response = await axios.post<Car>('https://localhost:7006/api/cars', newCar);
-      setCars((prevCars) => [...prevCars, response.data]); // Update the car list with the new car
+      setCars((prevCars) => [...prevCars, response.data]); 
+      setResult((prevCars) => [...prevCars, response.data]);
     } catch (error) {
       console.error('Error creating car:', error);
     }
@@ -68,14 +79,14 @@ const App: React.FC = () => {
   };
   const confirmRemoveCar = () => {
     if (selectedCar) {
-      removeCar(selectedCar.id); // Call remove user logic
-      setIsConfirmRemoveOpen(false); // Close the confirmation modal
+      removeCar(selectedCar.id); 
+      setIsConfirmRemoveOpen(false); 
     }
   };
 
   const openEditModal = (car: Car) => {
-    setSelectedCar(car); // Set the car to be edited
-    setIsEditModalOpen(true); // Open the edit modal
+    setSelectedCar(car); 
+    setIsEditModalOpen(true); 
   };
   const handleEditCar = async (id: number, name: string, status: string, photoBase64: string | null) => {
     try {
@@ -83,19 +94,22 @@ const App: React.FC = () => {
       const response = await axios.put<Car>(`https://localhost:7006/api/cars/${id}`, updatedCar);
       setCars(cars.map(car => car.id === id ? response.data : car));
       setResult(result.map(car => car.id === id ? response.data : car));
+      setIsEditModalOpen(false);
     } catch (error) {
       console.error('Error editing car:', error);
     }
   };
+
+
   return (
-  <div>
+  <div className='background-color'>
     <div className='search-bar-background'>
         <SearchBar onSearch={handleSearch} />
     </div>
     <div className="container">
         <div className="create-user-section">
-          <p>Resultados da Busca</p>
-          <button onClick={() => setIsModalOpen(true)}>Novo Card</button>
+          <p className='Result-text'>Resultados da Busca</p>
+          <button className='Novo-card' onClick={() => setIsModalOpen(true)}><text style={{color:'white'}}>Novo Card</text></button>
         </div>
         {/* Modal for Creating User */}
         <Modal
@@ -127,6 +141,18 @@ const App: React.FC = () => {
         />
       ))}
       </div>
+      {/* Pagination Controls */}
+      { result && (
+      <div className="pagination">
+        <button onClick={prevPage} disabled={currentPage === 1}>
+          Previous
+        </button>
+        <span>Page {currentPage}</span>
+        <button onClick={nextPage} disabled={currentPage === Math.ceil(cars.length / itemsPerPage)}>
+          Next
+        </button>
+      </div>
+      )}
     </div>
   </div>
   );

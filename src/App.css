@@ -1,6 +1,24 @@
 .App {
   text-align: center;
 }
+.Result-text{
+  font-size: 22px;
+  color: #af2f9a;
+}
+.background-color{
+  background-color: rgb(237, 237, 237);
+  min-height: 100vh;
+}
+.Novo-card{
+  width: 15%;
+  height: 10px;
+  background-color: orange;
+  padding: 20px;
+  border-radius: 8px;
+  border-color: rgb(234, 234, 234);
+  align-items: center;
+  display: flex;
+}
 .container {
   margin-left: 15%;
   margin-right: 15%;
@@ -27,6 +45,7 @@
   flex-wrap: wrap;
   gap: 20px; 
   justify-content: flex-start; 
+  
 }
 .App-logo {
   height: 40vmin;
@@ -61,4 +80,28 @@
   to {
     transform: rotate(360deg);
   }
+}
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.pagination button {
+  padding: 10px 20px;
+  background-color: #2196F3;
+  color: white;
+  border: none;
+  cursor: pointer;
+  margin: 0 10px;
+}
+
+.pagination button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.pagination span {
+  font-size: 18px;
 }

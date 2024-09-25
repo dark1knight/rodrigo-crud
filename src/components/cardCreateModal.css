@@ -36,7 +36,7 @@
 
 .modal-buttons {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
 }
 
 .modal-buttons button {

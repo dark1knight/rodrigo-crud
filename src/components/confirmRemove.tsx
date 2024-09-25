@@ -27,6 +27,7 @@ const ConfirmRemoveModal: React.FC<ConfirmRemoveModalProps> = ({ isOpen, onClose
         </div>
         <h2>Excluir</h2>
         <p> CERTEZA QUE DESEJA EXCLUIR?</p>
+        <div className="card-divider-Remove"></div>
         <div className="confirm-remove-modal-buttons">
           <button onClick={onConfirm} className="confirm-remove-button">Confirm</button>
           <button onClick={onClose} className="cancel-remove-button">Cancel</button>

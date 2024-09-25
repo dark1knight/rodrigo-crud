@@ -11,7 +11,11 @@
     z-index: 1000;
     pointer-events: all;
   }
-  
+  .card-divider-Remove{
+    width: 90%; /* Set the line width to 75% of the card */
+    border-bottom: 1px solid #ccc; /* Define the line color and style */
+    margin: 0 auto 15px auto; /* Center the line and add spacing below */
+  }
   .confirm-remove-modal-content {
     background-color: white;
     padding: 20px;
@@ -30,6 +34,7 @@
   
   .confirm-remove-button {
     background-color: #f44336; 
+    width: 45%;
     color: white; 
     border: none;
     padding: 10px 20px; 
@@ -44,6 +49,7 @@
   
   .cancel-remove-button {
     background-color: white; 
+    width: 45%;
     color: #f44336; 
     border: 2px solid #f44336; 
     padding: 10px 20px;

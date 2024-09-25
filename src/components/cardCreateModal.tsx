@@ -48,22 +48,21 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, onSubmit }) => {
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="Car Name"
+          placeholder="Nome do Carro"
         />
         <input
           type="text"
           value={status}
           onChange={(e) => setStatus(e.target.value)}
-          placeholder="Car Status"
+          placeholder="Status do Carro"
         />
         <input
           type="file"
           accept="image/*"
-          onChange={handleFileChange} // Handle file selection and Base64 conversion
+          onChange={handleFileChange} 
         />
         <div className="modal-buttons">
-          <button onClick={handleSubmit}>Submit</button>
-          <button onClick={onClose}>Close</button>
+          <button onClick={handleSubmit} style={{backgroundColor:'orange'}}>Criar Card</button>
         </div>
       </div>
     </div>

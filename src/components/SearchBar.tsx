@@ -23,11 +23,11 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
           type="text"
           value={query}
           onChange={handleInputChange}
-          placeholder="Search..."
+          placeholder="Digite aqui sua busca..."
           className="search-input"
         />
         <button className="search-button" onClick={handleSearch}>
-          <FaSearch />
+          <FaSearch className='search-icon'/>
         </button>
     </div>
   );

@@ -17,18 +17,17 @@ interface CarCardProps {
           alt={`${car.name} Avatar`} 
           className="car-avatar" 
         />
+        <div className="card-divider"></div>
         <div className="car-info">
-          <p><strong>Name:</strong> {car.name}</p>
+          <p><strong>Nome:</strong> {car.name}</p>
           <p><strong>Status:</strong> {car.status}</p>
         </div>
         <div className="car-actions">
           <button onClick={() => handleRemoveCar(car.id)} className="remove-button">
-            <FaTrash style={{ marginRight: '5px' }} />
-            Remover
+            <FaTrash style={{ marginRight: '5px', color: 'red'}} /><text style={{color:'grey'}}>Remover</text> 
           </button>
           <button onClick={() => handleEditCar(car.id)} className="edit-button">
-            <FaPencilAlt style={{ marginRight: '5px' }} />
-            Editar
+            <FaPencilAlt style={{ marginRight: '5px', color:'orange'}} /><text style={{color:'grey'}}>Editar</text>
           </button>
         </div>
       </div>

@@ -19,7 +19,11 @@
     height: 80px;
     margin-bottom: 15px;
   }
-  
+  .card-divider {
+    width: 75%; 
+    border-bottom: 1px solid #ccc; 
+    margin: 0 auto 15px auto; 
+  }
   .car-info {
     text-align: center;
     margin-bottom: 10px;
@@ -31,18 +35,9 @@
     width: 100%;
     margin-top: auto; 
   }
-  
-  .car-actions button:first-child {
-    border-bottom-left-radius: 10px; 
-  }
-  
+   
   .car-actions button {
     border-radius: 0;
-    display: block;
-  }
-  
-  .car-actions button:last-child {
-    border-bottom-right-radius: 10px; 
   }
   
   .edit-button, .remove-button {
@@ -58,20 +53,20 @@
   }
   
   .edit-button {
-    background-color: #2196F3;
+    background-color: #f9f9f9;
     color: white;
   }
   
   .remove-button {
-    background-color: #f44336;
+    background-color: #f9f9f9;
     color: white;
   }
   
   .edit-button:hover {
-    background-color: #1976D2;
+    background-color: #d8d8d8;
   }
   
   .remove-button:hover {
-    background-color: #d32f2f;
+    background-color: #d8d8d8;
   }
   
