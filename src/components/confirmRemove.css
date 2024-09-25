@@ -12,9 +12,10 @@
     pointer-events: all;
   }
   .card-divider-Remove{
-    width: 90%; /* Set the line width to 75% of the card */
-    border-bottom: 1px solid #ccc; /* Define the line color and style */
-    margin: 0 auto 15px auto; /* Center the line and add spacing below */
+    width: 90%; 
+    border-bottom: 1px solid #ccc; 
+    margin: 0 auto 15px auto; 
+    margin-top: 10px;
   }
   .confirm-remove-modal-content {
     background-color: white;
@@ -29,7 +30,6 @@
   .confirm-remove-modal-buttons {
     display: flex;
     justify-content: space-between;
-    margin-top: 20px;
   }
   
   .confirm-remove-button {

@@ -23,9 +23,10 @@ const App: React.FC = () => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+  const currentData = result.length > 0 ? result : cars;
   const indexOfLastCar = currentPage * itemsPerPage;
   const indexOfFirstCar = indexOfLastCar - itemsPerPage;
-  const currentCars = cars.slice(indexOfFirstCar, indexOfLastCar);
+  const currentCars = currentData.slice(indexOfFirstCar, indexOfLastCar);
 
   const handleSearch = async (query: string) => {
     try {
@@ -134,7 +135,7 @@ const App: React.FC = () => {
        {/* Pagination Component */}
        <Pagination
         currentPage={currentPage}
-        totalItems={cars.length}
+        totalItems={result.length}
         itemsPerPage={itemsPerPage}
         onPageChange={(page) => setCurrentPage(page)} // Update current page
       />

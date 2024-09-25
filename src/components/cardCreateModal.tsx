@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {Car} from '../model/car'
 import './cardCreateModal.css';
 
@@ -9,9 +9,24 @@ interface ModalProps {
 }
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, onSubmit }) => {
+  const [isVisible, setIsVisible] = useState(false); 
+  const [shouldRender, setShouldRender] = useState(isOpen); 
   const [name, setName] = useState('');
   const [status, setStatus] = useState('');
   const [photoBase64, setPhotoBase64] = useState('');
+
+  useEffect(() => {
+    if (isOpen) {
+      // Add slight delay to allow for smooth transitions
+      setTimeout(() => {
+        setIsVisible(true);
+      }, 50);
+    } else {
+      setIsVisible(false); // Trigger closing animation
+      setTimeout(() => setShouldRender(false), 400); // Wait for animation to finish, then unmount
+    }
+  }, [isOpen]);
+
 
   if (!isOpen) return null;
 
@@ -36,31 +51,41 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, onSubmit }) => {
     }
   };
 
+  const modalClass = isVisible ? 'modal-overlay open' : 'modal-overlay';
+  const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget) {  // Ensure click is outside the modal content
+      onClose();
+    }
+  };
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content">
+    <div className={modalClass} onClick={handleOverlayClick}>
+      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <button className="modal-close-button" onClick={onClose}>
           &times;
         </button>
-        <h2>Criar Carro</h2>
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Nome do Carro"
-        />
-        <input
-          type="text"
-          value={status}
-          onChange={(e) => setStatus(e.target.value)}
-          placeholder="Status do Carro"
-        />
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleFileChange} 
-        />
+        <h2 style={{color:'purple', fontSize: 22}}>Criar Carro</h2>
+        <div className="card-divider-Card"></div>
+          Insira o nome do Carro
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Nome do Carro"
+          />
+          Informe o Status do Carro
+          <input
+            type="text"
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            placeholder="Status do Carro"
+          />
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange} 
+          />
+        <div className="card-divider-Card"></div>
         <div className="modal-buttons">
           <button onClick={handleSubmit} style={{backgroundColor:'orange'}}>Criar Card</button>
         </div>

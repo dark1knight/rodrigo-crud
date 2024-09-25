@@ -1,6 +1,6 @@
 import React from 'react';
 import './Pagination.css';
-
+import { FaAngleLeft, FaAngleRight } from 'react-icons/fa';
 interface PaginationProps {
   currentPage: number;
   totalItems: number;
@@ -10,7 +10,7 @@ interface PaginationProps {
 
 const Pagination: React.FC<PaginationProps> = ({ currentPage, totalItems, itemsPerPage, onPageChange }) => {
   const totalPages = Math.ceil(totalItems / itemsPerPage);
-  
+
   if (totalItems === 0) return null;
 
   const nextPage = () => {
@@ -28,11 +28,11 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalItems, itemsP
   return (
     <div className="pagination">
       <button onClick={prevPage} disabled={currentPage === 1}>
-        Previous
+      <FaAngleLeft /> 
       </button>
       <span>Page {currentPage} of {totalPages}</span>
       <button onClick={nextPage} disabled={currentPage === totalPages}>
-        Next
+      <FaAngleRight />
       </button>
     </div>
   );
