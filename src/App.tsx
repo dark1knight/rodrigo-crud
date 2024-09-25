@@ -8,6 +8,7 @@ import ConfirmRemoveModal from './components/confirmRemove';
 import EditModal from './components/editModal';
 import './App.css';
 import { Car } from './model/car';
+import Pagination from './components/Pagination';
 
 const App: React.FC = () => {
   const [result, setResult] = useState<Car[]>([]);
@@ -26,20 +27,9 @@ const App: React.FC = () => {
   const indexOfFirstCar = indexOfLastCar - itemsPerPage;
   const currentCars = cars.slice(indexOfFirstCar, indexOfLastCar);
 
-  const nextPage = () => {
-    if (currentPage < Math.ceil(cars.length / itemsPerPage)) {
-      setCurrentPage((prevPage) => prevPage + 1);
-    }
-  };
-  const prevPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage((prevPage) => prevPage - 1);
-    }
-  };
-
   const handleSearch = async (query: string) => {
     try {
-      const response = await axios.get<Car[]>(`https://localhost:7006/api/Cars/search?query=${query}`);
+      const response = await axios.get<Car[]>(`https://app-rodrigonakamuta-api.azurewebsites.net/api/Cars/search?query=${query}`);
       setResult(response.data);
     } catch (error) {
       console.error('Error:', error);
@@ -55,7 +45,7 @@ const App: React.FC = () => {
     };
   
     try {
-      const response = await axios.post<Car>('https://localhost:7006/api/cars', newCar);
+      const response = await axios.post<Car>('https://app-rodrigonakamuta-api.azurewebsites.net/api/cars', newCar);
       setCars((prevCars) => [...prevCars, response.data]); 
       setResult((prevCars) => [...prevCars, response.data]);
     } catch (error) {
@@ -64,7 +54,7 @@ const App: React.FC = () => {
   };
   const removeCar = async (id: number) => {
     try {
-      await axios.delete(`https://localhost:7006/api/cars/${id}`);
+      await axios.delete(`https://app-rodrigonakamuta-api.azurewebsites.net/api/cars/${id}`);
       setCars(cars.filter((car) => car.id !== id))
       setResult(result.filter((car) => car.id !== id)); 
       setSelectedCar(null); // Reset the selected car
@@ -91,7 +81,7 @@ const App: React.FC = () => {
   const handleEditCar = async (id: number, name: string, status: string, photoBase64: string | null) => {
     try {
       const updatedCar = { name, status, photo: { base64: photoBase64 || '' } };
-      const response = await axios.put<Car>(`https://localhost:7006/api/cars/${id}`, updatedCar);
+      const response = await axios.put<Car>(`https://app-rodrigonakamuta-api.azurewebsites.net/api/cars/${id}`, updatedCar);
       setCars(cars.map(car => car.id === id ? response.data : car));
       setResult(result.map(car => car.id === id ? response.data : car));
       setIsEditModalOpen(false);
@@ -132,7 +122,7 @@ const App: React.FC = () => {
         car={selectedCar ? selectedCar : null}
         />
      <div className="results-container">
-      {result.map((car) => (
+      {currentCars.map((car) => (
         <CarCard
           key={car.id}
           car={car}  
@@ -141,18 +131,13 @@ const App: React.FC = () => {
         />
       ))}
       </div>
-      {/* Pagination Controls */}
-      { result && (
-      <div className="pagination">
-        <button onClick={prevPage} disabled={currentPage === 1}>
-          Previous
-        </button>
-        <span>Page {currentPage}</span>
-        <button onClick={nextPage} disabled={currentPage === Math.ceil(cars.length / itemsPerPage)}>
-          Next
-        </button>
-      </div>
-      )}
+       {/* Pagination Component */}
+       <Pagination
+        currentPage={currentPage}
+        totalItems={cars.length}
+        itemsPerPage={itemsPerPage}
+        onPageChange={(page) => setCurrentPage(page)} // Update current page
+      />
     </div>
   </div>
   );
