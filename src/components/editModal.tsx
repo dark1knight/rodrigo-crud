@@ -11,11 +11,26 @@ interface EditUserModalProps {
 }
 
 const EditUserModal: React.FC<EditUserModalProps> = ({ isOpen, onClose, onSubmit, carToEdit }) => {
+  const [isVisible, setIsVisible] = useState(false);  // Handles visibility
+  const [isClosing, setIsClosing] = useState(false); 
+
   const [name, setName] = useState('');
   const [status, setStatus] = useState('');
   const [photoBase64, setPhotoBase64] = useState<string | null>(null);
 
-  // Pre-fill the form when the modal is opened with the current user data
+  useEffect(() => {
+    if (isOpen) {
+      setIsClosing(false);  
+      setTimeout(() => setIsVisible(true), 50);  
+    } else if (isVisible) {
+      setIsClosing(true);  
+      setTimeout(() => {
+        setIsVisible(false);
+        setIsClosing(false);
+      }, 400);  
+    }
+  }, [isOpen, isVisible]);
+
   useEffect(() => {
     if (isOpen && carToEdit) {
       setName(carToEdit.name);
@@ -46,35 +61,42 @@ const EditUserModal: React.FC<EditUserModalProps> = ({ isOpen, onClose, onSubmit
     }
   };
 
+  const modalClass = isVisible && !isClosing ? 'edit-user-modal-overlay open' : 'edit-user-modal-overlay';
+
 
   return (
-    <div className="edit-user-modal-overlay">
-      <div className="edit-user-modal-content">
+    <div className={modalClass} onClick={onClose}>
+      <div className="edit-user-modal-content" onClick={(e) => e.stopPropagation()}>
         <button className="edit-user-close-button" onClick={onClose}>
           &times;
         </button>
-        <h2>Editar Card</h2>
+        <h2 style={{ color: 'purple', fontSize: 22 }}>Editar Carro</h2>
+        <div className="card-divider-Card"></div>
+
         <input
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="Name"
+          placeholder="Nome do Carro"
         />
+
         <input
           type="text"
           value={status}
           onChange={(e) => setStatus(e.target.value)}
-          placeholder="Car Status"
-          required
+          placeholder="Status do Carro"
         />
+
         <input
           type="file"
           accept="image/*"
           onChange={handleFileChange}
         />
+        <div className="card-divider-edit"></div>
         <div className="edit-user-modal-buttons">
-          <button onClick={handleSubmit}>Submit</button>
-          <button onClick={onClose}>Cancel</button>
+          <button onClick={handleSubmit} style={{ backgroundColor: 'orange' }}>
+           <text style={{color:'white'}}>Atualizar Carro</text>
+          </button>
         </div>
       </div>
     </div>
